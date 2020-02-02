@@ -1,10 +1,17 @@
 from django.http import JsonResponse
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from . import Place
 
 def index(request):
+    #data = sortPlaces(getDictionary())
     data = getDictionary()
+    data = sortDictionary(data)
     responseData = {"data": data}
+    #fullResp = []
+    #for x in data:
+        #fullResp.append(x.toJSON)
+    #return JsonResponse(fullResp)
     return JsonResponse(responseData)
 # Create your views here.
 
@@ -63,13 +70,18 @@ def getDictionary():
                 if "eggs" in ingredientsList:
                     score+=0.0287
         if num != 0:
-            x = Place(restaurant, score/num)
+            x = Place.Place(restaurant, score/num)
             places_list.append(x)
 
             scores_dict[restaurant] = score/num
 
-    return places_list
+    #return places_list
+    return scores_dict
 
 def sortPlaces(places_list):
-    p = sorted(places_list, key=lambda x: x.count, reverse=True)
+    p = sorted(places_list, key=lambda x: x.score, reverse=True)
+    return p
+
+def sortDictionary(scores_dict):
+    p = sorted(scores_dict.items(), key=lambda x: x[1], reverse=False)
     return p
