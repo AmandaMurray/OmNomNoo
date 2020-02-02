@@ -9,7 +9,7 @@ def index(request):
 # Create your views here.
 
 def getDictionary():
-    driver = webdriver.Chrome(executable_path = "C:/Users/amm2x/OneDrive/Desktop/chromedriver_win32/chromedriver.exe")
+    driver = webdriver.Chrome(executable_path = "C:/Users/Emily Flynn/Downloads/chromedriver_win32/chromedriver.exe")
     driver.get("https://www.hoyaeats.com/menu-hours/")
     elem = driver.find_elements_by_class_name("open-now-location-link")
     link_list = []
@@ -18,6 +18,7 @@ def getDictionary():
         if "https://www.hoyaeats.com/" in link:
             #print(a.text)
             link_list.append(link)
+    places_list = []
     scores_dict = {}
     for link in link_list:
         driver.get(link)
@@ -62,5 +63,13 @@ def getDictionary():
                 if "eggs" in ingredientsList:
                     score+=0.0287
         if num != 0:
+            x = Place(restaurant, score/num)
+            places_list.append(x)
+
             scores_dict[restaurant] = score/num
-    return scores_dict
+
+    return places_list
+
+def sortPlaces(places_list):
+    p = sorted(places_list, key=lambda x: x.count, reverse=True)
+    return p
